@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Online Library Management System</title>
+    <style>
+        /* Basic styling for the layout */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+        }
+
+        #left-column, #center-column, #right-column {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        /* Styling for the book list */
+        #left-column {
+            flex: 1;
+            min-width: 200px;
+            max-width: 300px;
+        }
+
+        #book-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .book-item {
+            margin: 10px 0;
+        }
+
+        /* Styling for the form to add new books */
+        #center-column {
+            flex: 2;
+        }
+
+        #add-book-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Styling for the search functionality */
+        #right-column {
+            flex: 1;
+            min-width: 200px;
+            max-width: 300px;
+        }
+
+        #search-input {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="left-column">
+        <h2>Book List</h2>
+        <ul id="book-list">
+            <!-- Book list items will be added here dynamically -->
+        </ul>
+    </div>
+
+    <div id="center-column">
+        <h2>Add New Book</h2>
+        <form id="add-book-form">
+            <label for="title">Title:</label>
+            <input type="text" id="title" required>
+
+            <label for="author">Author:</label>
+            <input type="text" id="author" required>
+
+            <label for="isbn">ISBN:</label>
+            <input type="text" id="isbn" required>
+
+            <button type="submit">Add Book</button>
+        </form>
+    </div>
+
+    <div id="right-column">
+        <h2>Search Books</h2>
+        <input type="text" id="search-input" placeholder="Search by title or author">
+        <ul id="search-results">
+            <!-- Search results will be displayed here dynamically -->
+        </ul>
+    </div>
+
+    <script>
+        // JavaScript to add interactivity
+
+        // Sample book data (you would typically fetch this from a server)
+        const books = [
+            { title: "Book 1", author: "Author 1", isbn: "ISBN-1" },
+            { title: "Book 2", author: "Author 2", isbn: "ISBN-2" },
+            // Add more book data here
+        ];
+
+        // Function to display the book list
+        function displayBookList() {
+            const bookList = document.getElementById("book-list");
+            bookList.innerHTML = '';
+
+            books.forEach(book => {
+                const li = document.createElement("li");
+                li.className = "book-item";
+                li.textContent = `${book.title} by ${book.author} (ISBN: ${book.isbn})`;
+                bookList.appendChild(li);
+            });
+        }
+
+        // Function to add a new book
+        function addBook(title, author, isbn) {
+            const duplicate = books.some(book => book.isbn === isbn);
+            if (duplicate) {
+                alert("This book already exists in the library.");
+            } else {
+                books.push({ title, author, isbn });
+                displayBookList();
+            }
+        }
+
+        // Function to handle form submission
+        document.getElementById("add-book-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+            const title = document.getElementById("title").value;
+            const author = document.getElementById("author").value;
+            const isbn = document.getElementById("isbn").value;
+            addBook(title, author, isbn);
+        });
+
+        // Function to search for books
+        document.getElementById("search-input").addEventListener("input", function () {
+            const query = this.value.toLowerCase();
+            const searchResults = document.getElementById("search-results");
+            searchResults.innerHTML = '';
+
+            const matchingBooks = books.filter(book => {
+                return book.title.toLowerCase().includes(query) || book.author.toLowerCase().includes(query);
+            });
+
+            matchingBooks.forEach(book => {
+                const li = document.createElement("li");
+                li.textContent = `${book.title} by ${book.author} (ISBN: ${book.isbn})`;
+                searchResults.appendChild(li);
+            });
+        });
+
+        // Initialize the book list
+        displayBookList();
+    </script>
+</body>
+</html>
